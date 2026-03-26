@@ -162,6 +162,7 @@
     background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
     background-size: 60px 60px; opacity: 0.3;
     -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
   }
 
   /* ── SECTION ── */
@@ -305,7 +306,7 @@
   footer {
     border-top: 1px solid var(--border); padding: 4rem 3rem;
     max-width: 1200px; margin: 0 auto;
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: gap;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
   }
   .footer-left .footer-name { font-family: var(--syne); font-weight: 800; font-size: 1.1rem; color: var(--accent); }
   .footer-left .footer-sub { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
@@ -325,6 +326,127 @@
   .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .fade-in.visible { opacity: 1; transform: translateY(0); }
 
+  /* ── PROJECT SCREENSHOT ── */
+  .project-img {
+    width: 100%; height: 180px; object-fit: cover;
+    border: 1px solid var(--border); margin-bottom: 1.5rem;
+    display: block; transition: transform 0.3s;
+    cursor: pointer;
+  }
+  .project-card:hover .project-img { transform: scale(1.02); }
+
+  /* ── GALLERY SECTION ── */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+  .gallery-item {
+    position: relative; overflow: hidden;
+    border: 1px solid var(--border); cursor: pointer;
+    transition: all 0.3s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+  }
+  .gallery-item:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,229,255,0.1); }
+  .gallery-item img { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform 0.4s; }
+  .gallery-item:hover img { transform: scale(1.05); }
+  .gallery-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+    display: flex; align-items: flex-end; padding: 1rem;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-label { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); letter-spacing: 0.1em; }
+
+  /* ── CONTACT MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 9000;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: var(--card); border: 1px solid var(--border);
+    width: 100%; max-width: 520px; padding: 3rem;
+    position: relative;
+    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+    transform: translateY(30px) scale(0.97);
+    transition: transform 0.35s ease;
+  }
+  .modal-overlay.active .modal-box { transform: translateY(0) scale(1); }
+  .modal-box::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .modal-close {
+    position: absolute; top: 1.2rem; right: 1.5rem;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); font-size: 1.2rem; cursor: pointer;
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { border-color: var(--accent); color: var(--accent); transform: rotate(90deg); }
+  .modal-title {
+    font-family: var(--syne); font-weight: 800; font-size: 1.8rem;
+    letter-spacing: -0.02em; margin-bottom: 0.4rem;
+  }
+  .modal-title span { color: var(--accent); }
+  .modal-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 2rem; }
+  .modal-contact-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+  .modal-contact-row {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--bg3); border: 1px solid var(--border);
+    padding: 1rem 1.2rem; transition: border-color 0.2s;
+    text-decoration: none; color: var(--text);
+  }
+  .modal-contact-row:hover { border-color: var(--accent); }
+  .modal-contact-row:hover .modal-contact-val { color: var(--accent); }
+  .modal-contact-icon { font-size: 1.3rem; min-width: 28px; text-align: center; }
+  .modal-contact-label { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .modal-contact-val { font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+  .modal-actions { display: flex; gap: 1rem; }
+  .modal-btn-primary {
+    flex: 1; background: var(--accent); color: #000;
+    font-family: var(--syne); font-weight: 700; padding: 0.9rem 1.5rem;
+    border: none; font-size: 0.85rem; letter-spacing: 0.04em;
+    cursor: pointer; text-decoration: none; display: flex;
+    align-items: center; justify-content: center;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    transition: all 0.2s;
+  }
+  .modal-btn-primary:hover { background: #fff; transform: translateY(-2px); }
+  .modal-btn-outline {
+    flex: 1; border: 1px solid var(--border); color: var(--text);
+    font-family: var(--syne); font-weight: 600; padding: 0.9rem 1.5rem;
+    font-size: 0.85rem; letter-spacing: 0.04em;
+    cursor: pointer; text-decoration: none; display: flex;
+    align-items: center; justify-content: center; background: transparent;
+    transition: all 0.2s;
+  }
+  .modal-btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 9500;
+    background: rgba(0,0,0,0.95);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .lightbox.active { opacity: 1; pointer-events: all; }
+  .lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; border: 1px solid var(--border); }
+  .lightbox-close {
+    position: absolute; top: 1.5rem; right: 2rem;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); font-size: 1.5rem; cursor: pointer;
+    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .lightbox-close:hover { border-color: var(--accent); color: var(--accent); }
+
   @media (max-width: 768px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
@@ -334,6 +456,8 @@
     .avail-banner { margin: 0 1.5rem 2rem; padding: 1.5rem; }
     footer { padding: 3rem 1.5rem; flex-direction: column; gap: 1rem; }
     .contact-grid { grid-template-columns: 1fr; }
+    .modal-box { padding: 2rem 1.5rem; margin: 1rem; }
+    .modal-actions { flex-direction: column; }
   }
 </style>
 </head>
@@ -365,7 +489,7 @@
         Available for remote freelance work worldwide — immediate joiner.
       </p>
       <div class="hero-cta">
-        <a href="mailto:opmaury001@gmail.com" class="btn-primary">Hire Me →</a>
+        <button onclick="openContactModal()" class="btn-primary" id="hire-me-btn">Hire Me →</button>
         <a href="#projects" class="btn-outline">View Projects</a>
       </div>
     </div>
@@ -411,7 +535,7 @@
     <div class="avail-text">🚀 Open for Freelance & Remote Opportunities</div>
     <div class="avail-sub">React · Node.js · MongoDB · REST APIs — Available globally, immediate start</div>
   </div>
-  <a href="mailto:opmaury001@gmail.com" class="btn-primary">Let's Work Together</a>
+  <button onclick="openContactModal()" class="btn-primary" id="lets-work-btn">Let's Work Together →</button>
 </div>
 
 <!-- SKILLS -->
@@ -474,6 +598,7 @@
     </div>
     <div class="projects-grid">
       <div class="project-card fade-in">
+        <img src="1.JPG" alt="E-Commerce Project Screenshot" class="project-img" onclick="openLightbox('1.JPG')">
         <div class="project-num">PROJECT / 001</div>
         <div class="project-title">E-Commerce Website</div>
         <p class="project-desc">Full-stack e-commerce platform with complete user authentication, product management, and shopping cart functionality.</p>
@@ -491,6 +616,7 @@
         </div>
       </div>
       <div class="project-card fade-in" style="animation-delay:0.1s">
+        <img src="2.JPG" alt="Business Landing Page Screenshot" class="project-img" onclick="openLightbox('2.JPG')">
         <div class="project-num">PROJECT / 002</div>
         <div class="project-title">Business Landing Page</div>
         <p class="project-desc">Modern, high-performance business landing page with mobile-first design and optimized loading speed.</p>
@@ -507,6 +633,7 @@
         </div>
       </div>
       <div class="project-card fade-in" style="animation-delay:0.2s">
+        <img src="3.JPG" alt="Dashboard Admin Panel Screenshot" class="project-img" onclick="openLightbox('3.JPG')">
         <div class="project-num">PROJECT / 003</div>
         <div class="project-title">Dashboard / Admin Panel</div>
         <p class="project-desc">Powerful admin dashboard with real-time data visualization and complete user management capabilities.</p>
@@ -520,6 +647,45 @@
           <span class="stack-tag">React.js</span>
           <span class="stack-tag">REST APIs</span>
           <span class="stack-tag">CSS3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT GALLERY: All 7 Screenshots -->
+    <div style="margin-top: 3rem;">
+      <div class="section-header fade-in" style="margin-bottom: 2rem;">
+        <span class="section-num">// gallery</span>
+        <h3 class="section-title" style="font-size: 1.4rem;">All Project Screenshots</h3>
+        <div class="section-line"></div>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item fade-in" onclick="openLightbox('1.JPG')">
+          <img src="1.JPG" alt="Project Screenshot 1" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-label">PROJECT_01.JPG</span></div>
+        </div>
+        <div class="gallery-item fade-in" style="animation-delay:0.05s" onclick="openLightbox('2.JPG')">
+          <img src="2.JPG" alt="Project Screenshot 2" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-label">PROJECT_02.JPG</span></div>
+        </div>
+        <div class="gallery-item fade-in" style="animation-delay:0.1s" onclick="openLightbox('3.JPG')">
+          <img src="3.JPG" alt="Project Screenshot 3" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-label">PROJECT_03.JPG</span></div>
+        </div>
+        <div class="gallery-item fade-in" style="animation-delay:0.15s" onclick="openLightbox('4.JPG')">
+          <img src="4.JPG" alt="Project Screenshot 4" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-label">PROJECT_04.JPG</span></div>
+        </div>
+        <div class="gallery-item fade-in" style="animation-delay:0.2s" onclick="openLightbox('5.JPG')">
+          <img src="5.JPG" alt="Project Screenshot 5" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-label">PROJECT_05.JPG</span></div>
+        </div>
+        <div class="gallery-item fade-in" style="animation-delay:0.25s" onclick="openLightbox('6.JPG')">
+          <img src="6.JPG" alt="Project Screenshot 6" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-label">PROJECT_06.JPG</span></div>
+        </div>
+        <div class="gallery-item fade-in" style="animation-delay:0.3s" onclick="openLightbox('7.JPG')">
+          <img src="7.JPG" alt="Project Screenshot 7" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-label">PROJECT_07.JPG</span></div>
         </div>
       </div>
     </div>
@@ -592,6 +758,55 @@
   </div>
 </section>
 
+<!-- CONTACT MODAL -->
+<div class="modal-overlay" id="contactModal" onclick="handleModalOverlayClick(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeContactModal()" aria-label="Close">✕</button>
+    <div class="modal-title">Let's <span>Connect</span></div>
+    <div class="modal-sub">Available for remote freelance & full-time opportunities — Immediate joiner</div>
+    <div class="modal-contact-list">
+      <a href="tel:+919588038150" class="modal-contact-row">
+        <span class="modal-contact-icon">📞</span>
+        <div>
+          <div class="modal-contact-label">Phone</div>
+          <div class="modal-contact-val">+91 9588038150</div>
+        </div>
+      </a>
+      <a href="mailto:opmaury001@gmail.com" class="modal-contact-row">
+        <span class="modal-contact-icon">✉️</span>
+        <div>
+          <div class="modal-contact-label">Email</div>
+          <div class="modal-contact-val">opmaury001@gmail.com</div>
+        </div>
+      </a>
+      <a href="https://github.com/" target="_blank" class="modal-contact-row">
+        <span class="modal-contact-icon">🐙</span>
+        <div>
+          <div class="modal-contact-label">GitHub</div>
+          <div class="modal-contact-val">github.com/omprakashmaury</div>
+        </div>
+      </a>
+      <a href="https://linkedin.com/" target="_blank" class="modal-contact-row">
+        <span class="modal-contact-icon">💼</span>
+        <div>
+          <div class="modal-contact-label">LinkedIn</div>
+          <div class="modal-contact-val">linkedin.com/in/omprakashmaury</div>
+        </div>
+      </a>
+    </div>
+    <div class="modal-actions">
+      <a href="mailto:opmaury001@gmail.com" class="modal-btn-primary">📧 Send Email</a>
+      <a href="tel:+919588038150" class="modal-btn-outline">📞 Call Now</a>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="Project Screenshot">
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-left">
@@ -620,6 +835,39 @@
     });
   }, { threshold: 0.1 });
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // ── CONTACT MODAL ──
+  function openContactModal() {
+    document.getElementById('contactModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeContactModal() {
+    document.getElementById('contactModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  function handleModalOverlayClick(e) {
+    if (e.target === document.getElementById('contactModal')) {
+      closeContactModal();
+    }
+  }
+  // Close modal on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeContactModal();
+      closeLightbox();
+    }
+  });
+
+  // ── LIGHTBOX ──
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
 </script>
 </body>
 </html>
